@@ -1,6 +1,7 @@
 "use client"
 import Image from 'next/image'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import Navigation from '@/components/Navigation'
 
 
 
@@ -24,7 +25,7 @@ export default function Home() {
 
   return (
     <div className='bg-blue-900 min-h-screen'>
-
+      <Navigation></Navigation>
       <h1>Logged in user: 
          {session?.user.name}</h1>
     </div>
