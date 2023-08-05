@@ -1,8 +1,11 @@
 "use client"
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 const EditProduct = ({ params }) => {
+    const router = useRouter()
+
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [price, setPrice] = useState("")
@@ -20,7 +23,14 @@ const EditProduct = ({ params }) => {
     const editProduct = async (e) => {
         e.preventDefault()
 
-        await axios.put("/api/products", {title, description, price, _id:params.id})
+        const status = await axios.put("/api/products", {title, description, price, _id:params.id})
+
+        if(status.status === 200){
+            alert("product updated")
+            router.push("/products")
+        } else{
+            alert("serverError, let the engineer know it")
+        }
     }
 
     return (

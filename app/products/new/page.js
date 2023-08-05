@@ -10,7 +10,6 @@ const NewProduct = () => {
         const data = { title: e.target.productName.value, description: e.target.productDes.value, price: e.target.productPrice.value }
 
         const status = await axios.post("/api/products", data)
-        console.log(status)
 
         if(status.status === 200){
             router.push("/products")
