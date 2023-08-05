@@ -1,7 +1,5 @@
 import { Product } from "@/models/Product"
 import { mongooseConnect } from "@/database/mongoose"
-import { mongo } from "mongoose";
-
 
 export const GET = async (req, res) => {
     const params = new URL(req.url).searchParams;
