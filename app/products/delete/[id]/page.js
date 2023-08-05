@@ -19,9 +19,14 @@ const DeleteProduct = ({ params }) => {
 
     const handleDelete = async () =>{
         if(params.id){
-            const status = await axios.delete("/api/product?id=" + params.id)
+            const status = await axios.delete("/api/products?id=" + params.id)
 
-            alert(status.status)
+            if(status.status === 200){
+                alert("Deleted Successfully")
+                router.push('/products')
+            }else{
+                alert("server error, let the engineer know it")
+            }
         }
     }
 
