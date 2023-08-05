@@ -20,7 +20,7 @@ const NewProduct = () => {
 }
 return (
     <form onSubmit={createProduct}>
-        <h1 className="">New Products</h1>
+        <h1 className="">New Product</h1>
         <label htmlFor="productName">Product name</label>
         <input id="productName" name="productName" required type="text" placeholder="products name" />
 
