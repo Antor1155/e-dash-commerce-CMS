@@ -8,7 +8,6 @@ const Nav = () => {
     const activeLink = inactiveLink + " bg-white text-blue-900 rounded-l-lg"
 
     const pathname = usePathname()
-    console.log(pathname)
     return (
         <aside className='text-white p-4 pr-0'>
             <Link href={"/"} className='flex gap-1 mb-4 mr-4'>
