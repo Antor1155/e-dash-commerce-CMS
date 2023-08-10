@@ -21,7 +21,9 @@ const Catagories = () => {
     }, [])
 
     function fetchCatagories (){
-        axios.get("/api/catagories").then(result => setAllCatagories(result.data)).catch(error => console.log(error))
+        axios.get("/api/catagories")
+        .then(result => setAllCatagories(result.data))
+        .catch(error => console.log(error))
     }
 
     return (
