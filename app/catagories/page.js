@@ -5,9 +5,12 @@ import {useState} from "react"
 const Catagories = () => {
     const [name, setName] = useState("")
 
-    async function handleSubmit (){
-        await axios.post("api/catagories", {name})
+    async function handleSubmit (e){
+        e.preventDefault()
+        const res = await axios.post("api/catagories", {name})
         setName("")
+
+        console.log(res.data)
     }
     return (
         <>
