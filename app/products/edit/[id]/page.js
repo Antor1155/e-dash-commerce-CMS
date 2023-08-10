@@ -2,14 +2,15 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
-import {UploadButton} from "@uploadthing/react"
+import { UploadButton } from "@uploadthing/react"
 import "@uploadthing/react/styles.css";
 
 const EditProduct = ({ params }) => {
     const router = useRouter()
 
-    const [photos, usePhotos] = useState([])
+    const [images, setImages] = useState([])
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -37,23 +38,13 @@ const EditProduct = ({ params }) => {
         }
     }
 
-
-    async function updoadImages(e) {
-        const files = e.target.files
-
-        if (files?.length > 0) {
-            const data = new FormData()
-
-            for (const file of files) {
-                data.append("file", file)
-            }
-
-            console.log("data is : ", data)
-            // const res = await axios.post("/api/upload", data)
-
-            // console.log("res on Image upload ***: ", res)
+    const handleImgDelete = async (image) =>{
+        const key = image.split("/").pop()
+        const res = await axios.delete("/api/uploadthing?id=" + key)
+        if(res.status  === 200){
+            const newImages = images.filter(ele => ele!= image)
+            setImages(newImages)
         }
-
     }
 
     return (
@@ -64,31 +55,32 @@ const EditProduct = ({ params }) => {
                 <input id="title" name="title" required type="text" placeholder="products name" value={title} onChange={e => setTitle(e.target.value)} />
 
                 <label>photos</label>
-                {/* <div className="mb-2">
-                    <label className="w-24 h-24 text-center flex flex-col items-center justify-center text-gray-500 rounded-lg bg-gray-200 cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                        </svg>
+                <div className="flex gap-2 mt-1">
+                    {images.map(image =>( <div className="imgInEdit border flex items-center" onClick={()=>handleImgDelete(image)} key={image}>
+                        <Image src={image} alt="product block" width={100} height={100} sizes="m(max-width: 100px)" />
+                        </div>
+                    ))}
+                </div>
 
-                        <input type="file" className="hidden" onChange={updoadImages} />
-                        <small>
-                            upload
-                        </small>
-                    </label>
-                    {!photos.length && <div> No photos in this product</div>}
-                </div> */}
-                <UploadButton
-                    endpoint="imageUploader"
-                    onClientUploadComplete={(res) => {
-                        // Do something with the response
-                        console.log("Files: ", res);
-                        alert("Upload Completed");
-                    }}
-                    onUploadError={(error) => {
-                        // Do something with the error.
-                        alert(`ERROR! ${error.message}`);
-                    }}
-                />
+                <div className="flex my-3">
+                    <UploadButton
+                        endpoint="imageUploader"
+                        onClientUploadComplete={(res) => {
+                            // Do something with the response
+                            console.log("Files: ", res);
+                            const newImages = [...images]
+                            for(const ele of res){
+                                newImages.push(ele.url)
+                            }
+                            setImages(newImages)
+                            // alert("Upload Completed");
+                        }}
+                        onUploadError={(error) => {
+                            // Do something with the error.
+                            alert(`ERROR! ${error.message}`);
+                        }}
+                    />
+                </div>
 
                 <label htmlFor="description">Description</label>
                 <textarea id="description" name="description" placeholder="description" value={description} onChange={e => setDescription(e.target.value)} />

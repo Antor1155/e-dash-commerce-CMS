@@ -73,3 +73,21 @@ table.basic a{
 .btn-default{
   @apply bg-gray-500 text-white;
 }
+
+.imgInEdit:hover img{
+  filter: blur(2px);
+}
+
+.imgInEdit{
+  position: relative;
+}
+
+.imgInEdit:hover::after{
+  content: "X";
+  font-weight: bolder;
+  font-size: larger;
+  color: red;
+  position: absolute;
+  top: 0%;
+  right: 10%;
+}
