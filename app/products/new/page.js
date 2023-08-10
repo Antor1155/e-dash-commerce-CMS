@@ -1,7 +1,7 @@
 "use client"
 import axios from "axios"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 import Image from "next/image"
 import { UploadButton } from "@uploadthing/react"
@@ -10,6 +10,7 @@ import "@uploadthing/react/styles.css";
 const NewProduct = () => {
     const router = useRouter()
 
+    const newAddedImagesRef = useRef([])
     const [images, setImages] = useState([])
 
     async function createProduct(e) {
@@ -23,6 +24,15 @@ const NewProduct = () => {
         } else {
             alert("serverError, couldn't save now, the engineers are working on it. or you let the engineers know the problem")
         }
+    }
+
+    const handleCancel = async () =>{
+        for (const img of newAddedImagesRef.current){
+            const key = img.split("/").pop()
+            await axios.delete("/api/uploadthing?id=" + key)
+        }
+
+        router.push("/products")
     }
 
     return (
@@ -47,6 +57,7 @@ const NewProduct = () => {
                         const newImages = [...images]
                         for (const ele of res) {
                             newImages.push(ele.url)
+                            newAddedImagesRef.current.push(ele.url)
                         }
                         setImages(newImages)
                         // alert("Upload Completed");
@@ -64,7 +75,14 @@ const NewProduct = () => {
             <label htmlFor="productPrice">Price (in USD)</label>
             <input id="productPrice" name="productPrice" type="number" placeholder="price" />
 
-            <button type="submit" className="btn-primary">Save</button>
+            <div className="flex gap-3 mt-4">
+                <button type="submit" className="btn-primary">Save</button>
+
+                <button type="button" onClick={handleCancel}
+                    className=" bg-red-500 text-white border rounded-lg p-2">
+                    Cancel
+                </button>
+            </div>
         </form>
     )
 }

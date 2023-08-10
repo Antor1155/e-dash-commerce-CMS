@@ -1,6 +1,6 @@
 "use client"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 
@@ -12,6 +12,7 @@ const EditProduct = ({ params }) => {
 
     const [images, setImages] = useState([])
     const [toDeleteImages, setToDeleteImages] = useState([])
+    const newAddedImagesRef = useRef([])
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -33,8 +34,8 @@ const EditProduct = ({ params }) => {
         const status = await axios.put("/api/products", { title, description, price, _id: params.id, images })
 
         if (status.status === 200) {
-            for (const key of toDeleteImages){
-                await  axios.delete("/api/uploadthing?id=" + key)
+            for (const key of toDeleteImages) {
+                await axios.delete("/api/uploadthing?id=" + key)
             }
             alert("product updated")
             router.push("/products")
@@ -43,14 +44,23 @@ const EditProduct = ({ params }) => {
         }
     }
 
-    const handleImgDelete = async (image) =>{
+    const handleImgDelete = async (image) => {
 
-        const newImages = images.filter(ele => ele!= image)
+        const newImages = images.filter(ele => ele != image)
         setImages(newImages)
 
         const key = image.split("/").pop()
-        const newToDeletImages = [...toDeleteImages, key] 
+        const newToDeletImages = [...toDeleteImages, key]
         setToDeleteImages(newToDeletImages)
+    }
+
+    const handleCancel = async () =>{
+        for (const img of newAddedImagesRef.current){
+            const key = img.split("/").pop()
+            await axios.delete("/api/uploadthing?id=" + key)
+        }
+
+        router.push("/products")
     }
 
     return (
@@ -62,9 +72,9 @@ const EditProduct = ({ params }) => {
 
                 <label>photos</label>
                 <div className="flex flex-wrap gap-2 mt-1">
-                    {images.map(image =>( <div className="imgInEdit border flex items-center" onClick={()=>handleImgDelete(image)} key={image}>
+                    {images.map(image => (<div className="imgInEdit border flex items-center" onClick={() => handleImgDelete(image)} key={image}>
                         <Image src={image} alt="product block" width={100} height={100} sizes="m(max-width: 100px)" />
-                        </div>
+                    </div>
                     ))}
                 </div>
 
@@ -74,8 +84,10 @@ const EditProduct = ({ params }) => {
                         onClientUploadComplete={(res) => {
                             // Do something with the response
                             const newImages = [...images]
-                            for(const ele of res){
+                            for (const ele of res) {
                                 newImages.push(ele.url)
+                                newAddedImagesRef.current.push(ele.url)
+
                             }
                             setImages(newImages)
                             // alert("Upload Completed");
@@ -93,7 +105,14 @@ const EditProduct = ({ params }) => {
                 <label htmlFor="price">Price (in USD)</label>
                 <input id="price" name="price" type="number" placeholder="price" value={price} onChange={e => setPrice(e.target.value)} />
 
-                <button type="submit" className="btn-primary">Save</button>
+                <div className="flex gap-3 mt-4">
+                    <button type="submit" className="btn-primary">Save</button>
+
+                    <button type="button" onClick={handleCancel}
+                        className=" bg-red-500 text-white border rounded-lg p-2">
+                        Cancel
+                    </button>
+                </div>
             </form>
         </>
     )
