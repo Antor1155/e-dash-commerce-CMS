@@ -11,6 +11,7 @@ const EditProduct = ({ params }) => {
     const router = useRouter()
 
     const [images, setImages] = useState([])
+    const [toDeleteImages, setToDeleteImages] = useState([])
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -68,7 +69,6 @@ const EditProduct = ({ params }) => {
                         endpoint="imageUploader"
                         onClientUploadComplete={(res) => {
                             // Do something with the response
-                            console.log("Files: ", res);
                             const newImages = [...images]
                             for(const ele of res){
                                 newImages.push(ele.url)

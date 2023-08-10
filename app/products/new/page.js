@@ -3,14 +3,18 @@ import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
+import Image from "next/image"
+import { UploadButton } from "@uploadthing/react"
+import "@uploadthing/react/styles.css";
+
 const NewProduct = () => {
     const router = useRouter()
 
-    const [photos, usePhotos] = useState([])
+    const [images, setImages] = useState([])
 
     async function createProduct(e) {
         e.preventDefault()
-        const data = { title: e.target.productName.value, description: e.target.productDes.value, price: e.target.productPrice.value }
+        const data = { title: e.target.productName.value, description: e.target.productDes.value, price: e.target.productPrice.value, images }
 
         const status = await axios.post("/api/products", data)
 
@@ -21,10 +25,6 @@ const NewProduct = () => {
         }
     }
 
-
-    function updoadImages(e){
-        console.log(e)
-    }
     return (
         <form onSubmit={createProduct}>
             <h1 className="">New Product</h1>
@@ -32,18 +32,30 @@ const NewProduct = () => {
             <input id="productName" name="productName" required type="text" placeholder="products name" />
 
             <label>photos</label>
-            <div className="mb-2">
-                <label className="w-24 h-24 text-center flex flex-col items-center justify-center text-gray-500 rounded-lg bg-gray-200 cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                    </svg>
+            <div className="flex flex-wrap gap-2 mt-1">
+                {images.map(image => (<div className="imgInEdit border flex items-center" onClick={() => handleImgDelete(image)} key={image}>
+                    <Image src={image} alt="product block" width={100} height={100} sizes="m(max-width: 100px)" />
+                </div>
+                ))}
+            </div>
 
-                    <input type="file" className="hidden" onChange={updoadImages}/>
-                    <small>
-                        upload
-                    </small>
-                </label>
-                {!photos.length && <div> No photos in this product</div>}
+            <div className="flex my-3">
+                <UploadButton
+                    endpoint="imageUploader"
+                    onClientUploadComplete={(res) => {
+                        // Do something with the response
+                        const newImages = [...images]
+                        for (const ele of res) {
+                            newImages.push(ele.url)
+                        }
+                        setImages(newImages)
+                        // alert("Upload Completed");
+                    }}
+                    onUploadError={(error) => {
+                        // Do something with the error.
+                        alert(`ERROR! ${error.message}`);
+                    }}
+                />
             </div>
 
             <label htmlFor="productDes">Description</label>
