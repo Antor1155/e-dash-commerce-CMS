@@ -11,7 +11,6 @@ export const { GET, POST } = createNextRouteHandler({
 export const DELETE = async(req, res) =>{
   const params = new URL(req.url).searchParams
   const id = params.get("id")
-  console.log("*** id : ", id, " url : ", req.url)
   if(id){
     const result = await utapi.deleteFiles(id)
     

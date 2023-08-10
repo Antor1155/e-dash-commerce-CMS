@@ -1,4 +1,4 @@
-import { Product } from "@/models/Product"
+import { Product } from "../../../models/Product";
 import { mongooseConnect } from "@/database/mongoose"
 
 export const GET = async (req, res) => {
@@ -28,10 +28,10 @@ export const POST = async (req, res) => {
     try {
         await mongooseConnect()
 
-        const { title, description, price } = data
+        const { title, description, price, images } = data
 
         const newProduct = new Product({
-            title, description, price
+            title, description, price, images
         })
 
         newProduct.save()
@@ -46,8 +46,8 @@ export const PUT = async (req, res) =>{
     try{
         await mongooseConnect()
 
-        const {title, description, price, _id} = await req.json()
-        await Product.updateOne({_id}, {title, description, price})
+        const {title, description, price, _id, images} = await req.json()
+        await Product.updateOne({_id}, {title, description, price, images})
         
         return new Response("success", {status:200})
     }catch(error){

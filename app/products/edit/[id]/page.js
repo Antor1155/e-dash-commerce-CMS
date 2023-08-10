@@ -22,13 +22,14 @@ const EditProduct = ({ params }) => {
                 setTitle(response.data.title)
                 setDescription(response.data.description)
                 setPrice(response.data.price)
+                setImages(response.data.images)
             })
     }, [])
 
     const editProduct = async (e) => {
         e.preventDefault()
 
-        const status = await axios.put("/api/products", { title, description, price, _id: params.id })
+        const status = await axios.put("/api/products", { title, description, price, _id: params.id, images })
 
         if (status.status === 200) {
             alert("product updated")
