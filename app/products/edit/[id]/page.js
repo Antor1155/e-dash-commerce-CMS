@@ -44,12 +44,6 @@ const EditProduct = ({ params }) => {
     }
 
     const handleImgDelete = async (image) =>{
-        // const key = image.split("/").pop()
-        // const res = await axios.delete("/api/uploadthing?id=" + key)
-        // if(res.status  === 200){
-        //     const newImages = images.filter(ele => ele!= image)
-        //     setImages(newImages)
-        // }
 
         const newImages = images.filter(ele => ele!= image)
         setImages(newImages)
