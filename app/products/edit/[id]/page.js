@@ -33,6 +33,9 @@ const EditProduct = ({ params }) => {
         const status = await axios.put("/api/products", { title, description, price, _id: params.id, images })
 
         if (status.status === 200) {
+            for (const key of toDeleteImages){
+                await  axios.delete("/api/uploadthing?id=" + key)
+            }
             alert("product updated")
             router.push("/products")
         } else {
@@ -41,12 +44,19 @@ const EditProduct = ({ params }) => {
     }
 
     const handleImgDelete = async (image) =>{
+        // const key = image.split("/").pop()
+        // const res = await axios.delete("/api/uploadthing?id=" + key)
+        // if(res.status  === 200){
+        //     const newImages = images.filter(ele => ele!= image)
+        //     setImages(newImages)
+        // }
+
+        const newImages = images.filter(ele => ele!= image)
+        setImages(newImages)
+
         const key = image.split("/").pop()
-        const res = await axios.delete("/api/uploadthing?id=" + key)
-        if(res.status  === 200){
-            const newImages = images.filter(ele => ele!= image)
-            setImages(newImages)
-        }
+        const newToDeletImages = [...toDeleteImages, key] 
+        setToDeleteImages(newToDeletImages)
     }
 
     return (
