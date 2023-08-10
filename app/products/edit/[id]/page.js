@@ -55,7 +55,7 @@ const EditProduct = ({ params }) => {
                 <input id="title" name="title" required type="text" placeholder="products name" value={title} onChange={e => setTitle(e.target.value)} />
 
                 <label>photos</label>
-                <div className="flex gap-2 mt-1">
+                <div className="flex flex-wrap gap-2 mt-1">
                     {images.map(image =>( <div className="imgInEdit border flex items-center" onClick={()=>handleImgDelete(image)} key={image}>
                         <Image src={image} alt="product block" width={100} height={100} sizes="m(max-width: 100px)" />
                         </div>
