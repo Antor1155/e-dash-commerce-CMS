@@ -89,7 +89,7 @@ const EditProduct = ({ params }) => {
                     ))}
                 </select>
 
-                <label>photos</label>
+                <label className="block">photos</label>
                 <div className="flex flex-wrap gap-2 mt-1">
                     {images.map(image => (<div className="imgInEdit border flex items-center" onClick={() => handleImgDelete(image)} key={image}>
                         <Image src={image} alt="product block" width={100} height={100} sizes="m(max-width: 100px)" />
