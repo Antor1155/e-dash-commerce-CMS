@@ -28,10 +28,10 @@ export const POST = async (req, res) => {
     try {
         await mongooseConnect()
 
-        const { title, description, price, images } = data
+        const { title, description, price, images, catagory } = data
 
         const newProduct = new Product({
-            title, description, price, images
+            title, description, price, images, catagory: catagory || null
         })
 
         newProduct.save()
@@ -46,8 +46,8 @@ export const PUT = async (req, res) =>{
     try{
         await mongooseConnect()
 
-        const {title, description, price, _id, images} = await req.json()
-        await Product.updateOne({_id}, {title, description, price, images})
+        const {title, description, price, _id, images, catagory} = await req.json()
+        await Product.updateOne({_id}, {title, description, price, images, catagory: catagory || null})
         
         return new Response("success", {status:200})
     }catch(error){

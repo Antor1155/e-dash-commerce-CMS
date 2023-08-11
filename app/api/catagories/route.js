@@ -60,7 +60,7 @@ export const DELETE = async (req, res) => {
 
         return new Response(JSON.stringify("deleted successfully"), { status: 200 })
     } catch (error) {
-        console.log("error in api/catagory/put ***, ")
+        console.log("error in api/catagory/delete ***, ")
         console.log(error)
     }
 }

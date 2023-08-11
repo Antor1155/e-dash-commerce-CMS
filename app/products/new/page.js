@@ -12,6 +12,7 @@ const NewProduct = () => {
 
     const newAddedImagesRef = useRef([])
     const [images, setImages] = useState([])
+    const [catagories, setAllCatagories] = useState([])
 
     async function createProduct(e) {
         e.preventDefault()
@@ -40,8 +41,15 @@ const NewProduct = () => {
             <h1 className="">New Product</h1>
             <label htmlFor="productName">Product name</label>
             <input id="productName" name="productName" required type="text" placeholder="products name" />
+            
+            <label htmlFor="catagories">Catagories</label>
+            <select id="catagories" className="w-auto ml-2">
+                <option value="">
+                Uncategorized
+                </option>
+            </select>
 
-            <label>photos</label>
+            <label className="block">photos</label>
             <div className="flex flex-wrap gap-2 mt-1">
                 {images.map(image => (<div className="imgInEdit border flex items-center" onClick={() => handleImgDelete(image)} key={image}>
                     <Image src={image} alt="product block" width={100} height={100} sizes="m(max-width: 100px)" />

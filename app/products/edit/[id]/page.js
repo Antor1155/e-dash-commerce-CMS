@@ -17,6 +17,9 @@ const EditProduct = ({ params }) => {
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [price, setPrice] = useState("")
+    const [catagory, setCatagory] = useState("")
+
+    const [allCatagories, setAllCatagories] = useState([])
 
     useEffect(() => {
         axios.get("/api/products?id=" + params.id)
@@ -25,19 +28,23 @@ const EditProduct = ({ params }) => {
                 setDescription(response.data.description)
                 setPrice(response.data.price)
                 setImages(response.data.images)
+                setCatagory(response.data.catagory)
+                console.log(response.data)
             })
+        axios.get("/api/catagories").then(result =>{
+            setAllCatagories(result.data)
+        })
     }, [])
 
     const editProduct = async (e) => {
         e.preventDefault()
 
-        const status = await axios.put("/api/products", { title, description, price, _id: params.id, images })
+        const status = await axios.put("/api/products", { title, description, price, _id: params.id, images, catagory })
 
         if (status.status === 200) {
             for (const key of toDeleteImages) {
                 await axios.delete("/api/uploadthing?id=" + key)
             }
-            alert("product updated")
             router.push("/products")
         } else {
             alert("serverError, let the engineer know it")
@@ -54,8 +61,8 @@ const EditProduct = ({ params }) => {
         setToDeleteImages(newToDeletImages)
     }
 
-    const handleCancel = async () =>{
-        for (const img of newAddedImagesRef.current){
+    const handleCancel = async () => {
+        for (const img of newAddedImagesRef.current) {
             const key = img.split("/").pop()
             await axios.delete("/api/uploadthing?id=" + key)
         }
@@ -69,6 +76,19 @@ const EditProduct = ({ params }) => {
                 <h1 className="">Edit Product</h1>
                 <label htmlFor="title">Product name</label>
                 <input id="title" name="title" required type="text" placeholder="products name" value={title} onChange={e => setTitle(e.target.value)} />
+
+                <label htmlFor="catagories">Catagories</label>
+                <select id="catagories" className="w-auto ml-2" value={catagory} onChange={e =>{
+                    setCatagory(e.target.value)
+                }}>
+                    <option value="">
+                        Uncategorized
+                    </option>
+
+                    {allCatagories.map(catagory =>(
+                        <option key={catagory._id} value={catagory._id}> {catagory.name}</option>
+                    ))}
+                </select>
 
                 <label>photos</label>
                 <div className="flex flex-wrap gap-2 mt-1">
