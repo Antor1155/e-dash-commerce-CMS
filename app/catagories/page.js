@@ -14,17 +14,19 @@ const Catagories = ({ swal }) => {
 
     async function handleSubmit(e) {
         e.preventDefault()
+
+        const data = { name, parentCatagory, properties }
+
         if (editedCatagory) {
-            const res = await axios.put("/api/catagories", { name, parentCatagory, _id: editedCatagory._id })
+            data._id = editedCatagory._id
+            const res = await axios.put("/api/catagories", data)
         } else {
-            const res = await axios.post("/api/catagories", { name, parentCatagory })
+            const res = await axios.post("/api/catagories", data)
         }
 
+        handleClearAll()
         fetchCatagories()
 
-        setName("")
-        setParentCatagory("")
-        setEditedCatagory("")
     }
 
     useEffect(() => {
@@ -45,10 +47,10 @@ const Catagories = ({ swal }) => {
 
     }
 
-    function handleCancelEdit() {
+    function handleClearAll() {
         setName("")
         setParentCatagory("")
-        setEditedCatagory("")
+        setEditedCatagory(null)
         setProperties([])
     }
 
@@ -72,14 +74,14 @@ const Catagories = ({ swal }) => {
 
     }
 
-    function addProperty (){
-        setProperties(prev =>{
-            return [...prev, {name: "", values: ""}]
+    function addProperty() {
+        setProperties(prev => {
+            return [...prev, { name: "", values: "" }]
         })
     }
 
-    function handlePropertyNameChange(index, property, newName){
-        setProperties(prev =>{
+    function handlePropertyNameChange(index, property, newName) {
+        setProperties(prev => {
             const properties = [...prev]
             properties[index].name = newName
 
@@ -87,8 +89,8 @@ const Catagories = ({ swal }) => {
         })
     }
 
-    function handlePropertyValuesChange(index, property, newValues){
-        setProperties(prev =>{
+    function handlePropertyValuesChange(index, property, newValues) {
+        setProperties(prev => {
             const properties = [...prev]
             properties[index].values = newValues
 
@@ -96,8 +98,8 @@ const Catagories = ({ swal }) => {
         })
     }
 
-    function removeProperty(indexToDel){
-        setProperties(prev =>{
+    function removeProperty(indexToDel) {
+        setProperties(prev => {
             const newProperties = [...prev].filter((p, ind) => ind != indexToDel)
 
             return newProperties
@@ -139,66 +141,70 @@ const Catagories = ({ swal }) => {
                         Add new property
                     </button>
 
-                    {properties.length > 0 && properties.map((property, index) =>(
+                    {properties.length > 0 && properties.map((property, index) => (
                         <div key={index} className="flex gap-1 mb-2">
 
-                            <input 
+                            <input
                                 className="mb-0"
-                                type="text" 
-                                placeholder="property name (ex: color)" 
+                                type="text"
+                                placeholder="property name (ex: color)"
                                 value={property.name}
                                 onChange={e => handlePropertyNameChange(index, property, e.target.value)}
                             />
-                            <input 
+                            <input
                                 className="mb-0"
-                                type="text" 
-                                placeholder="values, comma seperated" 
+                                type="text"
+                                placeholder="values, comma seperated"
                                 value={property.values}
                                 onChange={e => handlePropertyValuesChange(index, property, e.target.value)}
-                                />
+                            />
 
                             <button
                                 type="button"
                                 className="btn-default"
                                 onClick={() => removeProperty(index)}
-                                >
-                                    remove
-                                </button>
+                            >
+                                remove
+                            </button>
                         </div>
                     ))}
                 </div>
 
                 <button type='submit' className='btn-primary mr-1'> Save</button>
-                <button type='submit' className='btn-reject' onClick={handleCancelEdit}> Cancel</button>
+                <button type='submit' className='btn-reject' onClick={handleClearAll}> Cancel</button>
 
             </form>
 
-            <table className="basic mt-4">
-                <thead>
-                    <tr>
-                        <td> Catagory name</td>
-                        <td> Parent catagory</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {allCatagories.length && allCatagories.map(catagory => (
-                        <tr key={catagory._id}>
-                            <td> {catagory.name} </td>
-                            <td>{catagory.parent?.name}</td>
-                            <td>
-                                <button className="btn-primary mr-1"
-                                    onClick={() => editCatagory(catagory)}>
-                                    Edit
-                                </button>
-                                <button className="btn-reject"
-                                    onClick={() => handleDeleteCatagory(catagory)}>
-                                    Delete
-                                </button>
-                            </td>
+            {!editedCatagory &&
+
+                <table className="basic mt-4">
+                    <thead>
+                        <tr>
+                            <td> Catagory name</td>
+                            <td> Parent catagory</td>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {allCatagories.length && allCatagories.map(catagory => (
+                            <tr key={catagory._id}>
+                                <td> {catagory.name} </td>
+                                <td>{catagory.parent?.name}</td>
+                                <td>
+                                    <button className="btn-primary mr-1"
+                                        onClick={() => editCatagory(catagory)}>
+                                        Edit
+                                    </button>
+                                    <button className="btn-reject"
+                                        onClick={() => handleDeleteCatagory(catagory)}>
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+            }
 
         </>
     )
