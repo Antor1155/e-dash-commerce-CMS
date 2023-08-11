@@ -51,6 +51,10 @@ const Catagories = ({ swal }) => {
 
         setParentCatagory(catagory?.parent?._id || "")
 
+        const processedProperties = catagory.properties.map(p => ({name: p.name, values: p.values.join(",")}))
+
+        setProperties(processedProperties)
+
     }
 
     function handleClearAll() {
