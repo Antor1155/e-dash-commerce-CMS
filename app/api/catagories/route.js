@@ -49,3 +49,19 @@ export const PUT = async (req, res) => {
     }
 }
 
+export const DELETE = async (req, res) => {
+    const params = new URL(req.url).searchParams
+    const _id = params.get("id")
+
+    try {
+        await mongooseConnect()
+
+        await Catagory.deleteOne({ _id })
+
+        return new Response(JSON.stringify("deleted successfully"), { status: 200 })
+    } catch (error) {
+        console.log("error in api/catagory/put ***, ")
+        console.log(error)
+    }
+}
+

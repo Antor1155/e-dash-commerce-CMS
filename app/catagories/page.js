@@ -1,8 +1,9 @@
 "use client"
 import axios from "axios"
 import { useState, useEffect } from "react"
+import { withSwal } from 'react-sweetalert2';
 
-const Catagories = () => {
+const Catagories = ({swal}) => {
     const [name, setName] = useState("")
     const [parentCatagory, setParentCatagory] = useState("")
 
@@ -18,7 +19,7 @@ const Catagories = () => {
         }
 
         fetchCatagories()
-        
+
         setName("")
         setParentCatagory("")
         setEditedCatagory("")
@@ -41,6 +42,33 @@ const Catagories = () => {
         setParentCatagory(catagory?.parent?._id || "")
 
     }
+
+    function handleCancelEdit(){
+        setName("")
+        setParentCatagory("")
+        setEditedCatagory("")
+    }
+
+    function handleDeleteCatagory(catagory){
+        swal.fire({
+            title: 'Are you Sure ?',
+            text: `Do you want to delet : ${catagory.name}`,
+            showCancelButton: true,
+            confirmButtonText: "Yes, Delete!",
+            confirmButtonColor: "#d55",
+            reverseButtons: true,
+        }).then(result =>{
+
+            if(result.isConfirmed){
+                axios.delete("/api/catagories?id=" + catagory._id)
+                
+                fetchCatagories()
+            }
+
+        }).catch(error => console.log(error))
+
+    }
+
 
     return (
         <>
@@ -66,6 +94,7 @@ const Catagories = () => {
                 </select>
 
                 <button type='submit' className='btn-primary'> Save</button>
+                <button type='submit' className='btn-reject' onClick={handleCancelEdit}> Cancel</button>
             </form>
 
             <table className="basic mt-2">
@@ -85,7 +114,8 @@ const Catagories = () => {
                                     onClick={() => editCatagory(catagory)}>
                                     Edit
                                 </button>
-                                <button className="btn-reject">
+                                <button className="btn-reject"
+                                    onClick={() =>handleDeleteCatagory(catagory)}>
                                     Delete
                                 </button>
                             </td>
@@ -98,4 +128,6 @@ const Catagories = () => {
     )
 }
 
-export default Catagories
+export default withSwal(({swal}, ref) => (
+    <Catagories swal={swal}/>
+))
