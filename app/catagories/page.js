@@ -15,7 +15,13 @@ const Catagories = ({ swal }) => {
     async function handleSubmit(e) {
         e.preventDefault()
 
-        const data = { name, parentCatagory, properties }
+        const data = { 
+            name,
+            parentCatagory, 
+            properties: properties.map(p =>({
+                name: p.name, 
+                values: p.values.split(",")})) 
+        }
 
         if (editedCatagory) {
             data._id = editedCatagory._id

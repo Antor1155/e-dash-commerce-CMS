@@ -18,12 +18,12 @@ export const GET = async (req, res) => {
 
 
 export const POST = async (req, res) => {
-    const { name, parentCatagory } = await req.json()
+    const { name, parentCatagory, properties } = await req.json()
 
     try {
         await mongooseConnect()
 
-        let CatagoryDoc = await Catagory.create({ name, parent: parentCatagory || null })
+        let CatagoryDoc = await Catagory.create({ name, properties, parent: parentCatagory || null })
 
         return new Response(JSON.stringify(CatagoryDoc), { status: 200 })
     } catch (error) {
@@ -34,12 +34,12 @@ export const POST = async (req, res) => {
 }
 
 export const PUT = async (req, res) => {
-    const { name, parentCatagory, _id } = await req.json()
+    const { name, parentCatagory, _id, properties } = await req.json()
 
     try {
         await mongooseConnect()
 
-        let CatagoryDoc = await Catagory.updateOne({ _id }, { name, parent: parentCatagory || null })
+        let CatagoryDoc = await Catagory.updateOne({ _id }, { name, properties, parent: parentCatagory || null })
 
 
         return new Response(JSON.stringify(CatagoryDoc), { status: 200 })
