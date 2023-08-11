@@ -1,22 +1,30 @@
 "use client"
 import axios from "axios"
 import { useRouter } from "next/navigation"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 
 import Image from "next/image"
 import { UploadButton } from "@uploadthing/react"
 import "@uploadthing/react/styles.css";
+
 
 const NewProduct = () => {
     const router = useRouter()
 
     const newAddedImagesRef = useRef([])
     const [images, setImages] = useState([])
-    const [catagories, setAllCatagories] = useState([])
+
+    const [catagory, setCatagory] = useState("")
+    const [allCatagories, setAllCatagories] = useState([])
+
+    useEffect(()=>{
+        axios.get("/api/catagories")
+        .then(result =>{setAllCatagories(result.data)})
+    }, [])
 
     async function createProduct(e) {
         e.preventDefault()
-        const data = { title: e.target.productName.value, description: e.target.productDes.value, price: e.target.productPrice.value, images }
+        const data = { title: e.target.productName.value, description: e.target.productDes.value, price: e.target.productPrice.value, images, catagory }
 
         const status = await axios.post("/api/products", data)
 
@@ -43,11 +51,17 @@ const NewProduct = () => {
             <input id="productName" name="productName" required type="text" placeholder="products name" />
             
             <label htmlFor="catagories">Catagories</label>
-            <select id="catagories" className="w-auto ml-2">
-                <option value="">
-                Uncategorized
-                </option>
-            </select>
+                <select id="catagories" className="w-auto ml-2" value={catagory} onChange={e =>{
+                    setCatagory(e.target.value)
+                }}>
+                    <option value="">
+                        Uncategorized
+                    </option>
+
+                    {allCatagories.map(catagory =>(
+                        <option key={catagory._id} value={catagory._id}> {catagory.name}</option>
+                    ))}
+                </select>
 
             <label className="block">photos</label>
             <div className="flex flex-wrap gap-2 mt-1">

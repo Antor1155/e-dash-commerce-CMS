@@ -29,7 +29,6 @@ const EditProduct = ({ params }) => {
                 setPrice(response.data.price)
                 setImages(response.data.images)
                 setCatagory(response.data.catagory)
-                console.log(response.data)
             })
         axios.get("/api/catagories").then(result =>{
             setAllCatagories(result.data)
