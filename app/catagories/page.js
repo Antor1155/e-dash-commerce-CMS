@@ -7,35 +7,53 @@ const Catagories = () => {
     const [parentCatagory, setParentCatagory] = useState("")
 
     const [allCatagories, setAllCatagories] = useState([])
+    const [editedCatagory, setEditedCatagory] = useState()
 
     async function handleSubmit(e) {
         e.preventDefault()
-        const res = await axios.post("/api/catagories", { name, parentCatagory })
+        if (editedCatagory) {
+            const res = await axios.put("/api/catagories", { name, parentCatagory, _id: editedCatagory._id })
+        } else {
+            const res = await axios.post("/api/catagories", { name, parentCatagory })
+        }
+
+        fetchCatagories()
+        
         setName("")
         setParentCatagory("")
-        fetchCatagories()
+        setEditedCatagory("")
     }
 
     useEffect(() => {
         fetchCatagories()
     }, [])
 
-    function fetchCatagories (){
+    function fetchCatagories() {
         axios.get("/api/catagories")
-        .then(result => setAllCatagories(result.data))
-        .catch(error => console.log(error))
+            .then(result => setAllCatagories(result.data))
+            .catch(error => console.log(error))
+    }
+
+    function editCatagory(catagory) {
+        setEditedCatagory(catagory)
+        setName(catagory.name)
+
+        setParentCatagory(catagory?.parent?._id || "")
+
     }
 
     return (
         <>
             <h1>Catagories</h1>
-            <label>New Catagory name</label>
+            <label>
+                {editedCatagory ? "Edit catagory ' " + editedCatagory.name + " '" : "New Catagory name"}
+            </label>
             <form className='flex gap-1' onSubmit={handleSubmit}>
-                <input type='text' placeholder="catagory name " className='mb-0' value={name} onChange={(e) => setName(e.target.value)} required/>
+                <input type='text' placeholder="catagory name " className='mb-0' value={name} onChange={(e) => setName(e.target.value)} required />
 
                 <select className="mb-0"
-                        value={parentCatagory}
-                        onChange={e =>setParentCatagory(e.target.value)}>
+                    value={parentCatagory}
+                    onChange={e => setParentCatagory(e.target.value)}>
 
                     <option value="">
                         No parent
@@ -62,6 +80,15 @@ const Catagories = () => {
                         <tr key={catagory._id}>
                             <td> {catagory.name} </td>
                             <td>{catagory.parent?.name}</td>
+                            <td>
+                                <button className="btn-primary mr-1"
+                                    onClick={() => editCatagory(catagory)}>
+                                    Edit
+                                </button>
+                                <button className="btn-reject">
+                                    Delete
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
