@@ -3,12 +3,14 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 import { withSwal } from 'react-sweetalert2';
 
-const Catagories = ({swal}) => {
+const Catagories = ({ swal }) => {
     const [name, setName] = useState("")
     const [parentCatagory, setParentCatagory] = useState("")
 
     const [allCatagories, setAllCatagories] = useState([])
     const [editedCatagory, setEditedCatagory] = useState()
+
+    const [properties, setProperties] = useState([])
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -43,13 +45,14 @@ const Catagories = ({swal}) => {
 
     }
 
-    function handleCancelEdit(){
+    function handleCancelEdit() {
         setName("")
         setParentCatagory("")
         setEditedCatagory("")
+        setProperties([])
     }
 
-    function handleDeleteCatagory(catagory){
+    function handleDeleteCatagory(catagory) {
         swal.fire({
             title: 'Are you Sure ?',
             text: `Do you want to delet : ${catagory.name}`,
@@ -57,11 +60,11 @@ const Catagories = ({swal}) => {
             confirmButtonText: "Yes, Delete!",
             confirmButtonColor: "#d55",
             reverseButtons: true,
-        }).then(result =>{
+        }).then(result => {
 
-            if(result.isConfirmed){
+            if (result.isConfirmed) {
                 axios.delete("/api/catagories?id=" + catagory._id)
-                
+
                 fetchCatagories()
             }
 
@@ -69,6 +72,37 @@ const Catagories = ({swal}) => {
 
     }
 
+    function addProperty (){
+        setProperties(prev =>{
+            return [...prev, {name: "", values: ""}]
+        })
+    }
+
+    function handlePropertyNameChange(index, property, newName){
+        setProperties(prev =>{
+            const properties = [...prev]
+            properties[index].name = newName
+
+            return properties
+        })
+    }
+
+    function handlePropertyValuesChange(index, property, newValues){
+        setProperties(prev =>{
+            const properties = [...prev]
+            properties[index].values = newValues
+
+            return properties
+        })
+    }
+
+    function removeProperty(indexToDel){
+        setProperties(prev =>{
+            const newProperties = [...prev].filter((p, ind) => ind != indexToDel)
+
+            return newProperties
+        })
+    }
 
     return (
         <>
@@ -76,28 +110,70 @@ const Catagories = ({swal}) => {
             <label>
                 {editedCatagory ? "Edit catagory ' " + editedCatagory.name + " '" : "New Catagory name"}
             </label>
-            <form className='flex gap-1' onSubmit={handleSubmit}>
-                <input type='text' placeholder="catagory name " className='mb-0' value={name} onChange={(e) => setName(e.target.value)} required />
+            <form className='' onSubmit={handleSubmit}>
+                <div className="flex gap-1">
 
-                <select className="mb-0"
-                    value={parentCatagory}
-                    onChange={e => setParentCatagory(e.target.value)}>
+                    <input type='text' placeholder="catagory name " className='' value={name} onChange={(e) => setName(e.target.value)} required />
 
-                    <option value="">
-                        No parent
-                    </option>
-                    {allCatagories.length && allCatagories.map(catagory => (
-                        <option key={catagory._id} value={catagory._id}>
-                            {catagory.name}
+                    <select className=""
+                        value={parentCatagory}
+                        onChange={e => setParentCatagory(e.target.value)}>
+
+                        <option value="">
+                            No parent
                         </option>
-                    ))}
-                </select>
+                        {allCatagories.length && allCatagories.map(catagory => (
+                            <option key={catagory._id} value={catagory._id}>
+                                {catagory.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-                <button type='submit' className='btn-primary'> Save</button>
+                <div className="mb-2">
+                    <label className="block">Properties</label>
+                    <button
+                        onClick={addProperty}
+                        type="button"
+                        className="btn-default text-sm mb-2">
+                        Add new property
+                    </button>
+
+                    {properties.length > 0 && properties.map((property, index) =>(
+                        <div key={index} className="flex gap-1 mb-2">
+
+                            <input 
+                                className="mb-0"
+                                type="text" 
+                                placeholder="property name (ex: color)" 
+                                value={property.name}
+                                onChange={e => handlePropertyNameChange(index, property, e.target.value)}
+                            />
+                            <input 
+                                className="mb-0"
+                                type="text" 
+                                placeholder="values, comma seperated" 
+                                value={property.values}
+                                onChange={e => handlePropertyValuesChange(index, property, e.target.value)}
+                                />
+
+                            <button
+                                type="button"
+                                className="btn-default"
+                                onClick={() => removeProperty(index)}
+                                >
+                                    remove
+                                </button>
+                        </div>
+                    ))}
+                </div>
+
+                <button type='submit' className='btn-primary mr-1'> Save</button>
                 <button type='submit' className='btn-reject' onClick={handleCancelEdit}> Cancel</button>
+
             </form>
 
-            <table className="basic mt-2">
+            <table className="basic mt-4">
                 <thead>
                     <tr>
                         <td> Catagory name</td>
@@ -115,7 +191,7 @@ const Catagories = ({swal}) => {
                                     Edit
                                 </button>
                                 <button className="btn-reject"
-                                    onClick={() =>handleDeleteCatagory(catagory)}>
+                                    onClick={() => handleDeleteCatagory(catagory)}>
                                     Delete
                                 </button>
                             </td>
@@ -128,6 +204,6 @@ const Catagories = ({swal}) => {
     )
 }
 
-export default withSwal(({swal}, ref) => (
-    <Catagories swal={swal}/>
+export default withSwal(({ swal }, ref) => (
+    <Catagories swal={swal} />
 ))
