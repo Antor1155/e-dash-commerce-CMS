@@ -36,7 +36,6 @@ const DeleteProduct = ({ params }) => {
             }
         }
     }
-    console.log(product)
 
     const goBack = () => {
         router.push("/products")
