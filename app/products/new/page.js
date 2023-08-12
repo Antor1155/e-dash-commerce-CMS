@@ -70,13 +70,6 @@ const NewProduct = () => {
 
             catInfo = parentCat
         }
-
-        // console.log(propertiesToFill)
-        // const newProductProperties = {}
-        // propertiesToFill.forEach(p => newProductProperties[p.name] = p.values[0])
-
-        // setProductProperties(newProductProperties)
-        // console.log("productP *** ", productProperties)
     }
 
 
@@ -106,10 +99,10 @@ const NewProduct = () => {
                     <div>{p.name} </div>
 
                     <select
-                        value={productProperties[p.name]}
+                        value={productProperties[p.name] || ""}
                         onChange={(e) => changeProductProp(p.name, e.target.value)}
                     >
-
+                        <option value=""> not selected</option>
                         {p.values.map((v, i) => (
                             <option value={v} key={i}>
                                 {v}

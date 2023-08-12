@@ -106,7 +106,7 @@ const EditProduct = ({ params }) => {
                 <input id="title" name="title" required type="text" placeholder="products name" value={title} onChange={e => setTitle(e.target.value)} />
 
                 <label htmlFor="catagories">Catagories</label>
-                <select id="catagories" className="w-auto ml-2" value={catagory} onChange={e => {
+                <select id="catagories" className="w-auto ml-2" value={catagory || ""} onChange={e => {
                     setCatagory(e.target.value)
                 }}>
                     <option value="">
@@ -123,10 +123,10 @@ const EditProduct = ({ params }) => {
                         <div>{p.name} </div>
 
                         <select
-                            value = {productProperties[p.name]}
+                            value = {productProperties[p.name] || ""}
                             onChange={(e) => changeProductProp(p.name, e.target.value)}
                         >
-
+                            <option value="">not selected</option>
                             {p.values.map((v, i) => (
                                 <option value={v} key={i}>
                                     {v}
