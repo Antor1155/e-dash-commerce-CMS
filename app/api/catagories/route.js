@@ -20,7 +20,6 @@ export const POST = async (req, res) => {
     const { name, parentCatagory, properties } = await req.json()
 
     try {
-        await isAdminRequest()
         await mongooseConnect()
 
         let CatagoryDoc = await Catagory.create({ name, properties, parent: parentCatagory || null })
@@ -37,7 +36,6 @@ export const PUT = async (req, res) => {
     const { name, parentCatagory, _id, properties } = await req.json()
 
     try {
-        await isAdminRequest()
         await mongooseConnect()
 
         let CatagoryDoc = await Catagory.updateOne({ _id }, { name, properties, parent: parentCatagory || null })
@@ -55,7 +53,6 @@ export const DELETE = async (req, res) => {
     const _id = params.get("id")
 
     try {
-        await isAdminRequest()
         await mongooseConnect()
 
         await Catagory.deleteOne({ _id })
