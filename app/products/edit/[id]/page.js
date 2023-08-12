@@ -19,6 +19,8 @@ const EditProduct = ({ params }) => {
     const [price, setPrice] = useState("")
     const [catagory, setCatagory] = useState("")
 
+    const [productProperties, setProductProperties] = useState({})
+
     const [allCatagories, setAllCatagories] = useState([])
 
     useEffect(() => {
@@ -29,8 +31,9 @@ const EditProduct = ({ params }) => {
                 setPrice(response.data.price)
                 setImages(response.data.images)
                 setCatagory(response.data.catagory)
+                setProductProperties(response.data.properties || {})
             })
-        axios.get("/api/catagories").then(result =>{
+        axios.get("/api/catagories").then(result => {
             setAllCatagories(result.data)
         })
     }, [])
@@ -38,7 +41,7 @@ const EditProduct = ({ params }) => {
     const editProduct = async (e) => {
         e.preventDefault()
 
-        const status = await axios.put("/api/products", { title, description, price, _id: params.id, images, catagory })
+        const status = await axios.put("/api/products", { title, description, price, _id: params.id, images, catagory, properties: productProperties })
 
         if (status.status === 200) {
             for (const key of toDeleteImages) {
@@ -69,6 +72,32 @@ const EditProduct = ({ params }) => {
         router.push("/products")
     }
 
+    function changeProductProp(propName, value) {
+        setProductProperties(prev => {
+            const newProductProp = { ...prev }
+            newProductProp[propName] = value
+
+            return newProductProp
+        })
+    }
+
+    const propertiesToFill = []
+
+    if (allCatagories.length > 0 && catagory) {
+        let catInfo = allCatagories.find(({ _id }) => _id === catagory)
+
+        propertiesToFill.push(...catInfo.properties)
+
+        while (catInfo?.parent?._id) {
+            const parentCat = allCatagories.find(({ _id }) => _id === catInfo?.parent?._id)
+
+            propertiesToFill.push(...parentCat.properties)
+
+            catInfo = parentCat
+        }
+    }
+
+
     return (
         <>
             <form onSubmit={editProduct}>
@@ -77,17 +106,39 @@ const EditProduct = ({ params }) => {
                 <input id="title" name="title" required type="text" placeholder="products name" value={title} onChange={e => setTitle(e.target.value)} />
 
                 <label htmlFor="catagories">Catagories</label>
-                <select id="catagories" className="w-auto ml-2" value={catagory} onChange={e =>{
+                <select id="catagories" className="w-auto ml-2" value={catagory} onChange={e => {
                     setCatagory(e.target.value)
                 }}>
                     <option value="">
                         Uncategorized
                     </option>
 
-                    {allCatagories.map(catagory =>(
+                    {allCatagories.map(catagory => (
                         <option key={catagory._id} value={catagory._id}> {catagory.name}</option>
                     ))}
                 </select>
+
+                {propertiesToFill.length > 0 && propertiesToFill.map((p, ind) => (
+                    <div className="flex gap-1" key={ind}>
+                        <div>{p.name} </div>
+
+                        <select
+                            value = {productProperties[p.name]}
+                            onChange={(e) => changeProductProp(p.name, e.target.value)}
+                        >
+
+                            {p.values.map((v, i) => (
+                                <option value={v} key={i}>
+                                    {v}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )
+
+                )}
+
+
 
                 <label className="block">photos</label>
                 <div className="flex flex-wrap gap-2 mt-1">

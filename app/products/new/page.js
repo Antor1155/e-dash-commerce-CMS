@@ -17,14 +17,16 @@ const NewProduct = () => {
     const [catagory, setCatagory] = useState("")
     const [allCatagories, setAllCatagories] = useState([])
 
-    useEffect(()=>{
+    const [productProperties, setProductProperties] = useState({})
+
+    useEffect(() => {
         axios.get("/api/catagories")
-        .then(result =>{setAllCatagories(result.data)})
+            .then(result => { setAllCatagories(result.data) })
     }, [])
 
     async function createProduct(e) {
         e.preventDefault()
-        const data = { title: e.target.productName.value, description: e.target.productDes.value, price: e.target.productPrice.value, images, catagory }
+        const data = { title: e.target.productName.value, description: e.target.productDes.value, price: e.target.productPrice.value, images, catagory, properties: productProperties }
 
         const status = await axios.post("/api/products", data)
 
@@ -35,8 +37,8 @@ const NewProduct = () => {
         }
     }
 
-    const handleCancel = async () =>{
-        for (const img of newAddedImagesRef.current){
+    const handleCancel = async () => {
+        for (const img of newAddedImagesRef.current) {
             const key = img.split("/").pop()
             await axios.delete("/api/uploadthing?id=" + key)
         }
@@ -44,24 +46,81 @@ const NewProduct = () => {
         router.push("/products")
     }
 
+    
+    function changeProductProp(propName, value) {
+        setProductProperties(prev => {
+            const newProductProp = { ...prev }
+            newProductProp[propName] = value
+
+            return newProductProp
+        })
+    }
+
+    const propertiesToFill = []
+
+    if (allCatagories.length > 0 && catagory) {
+        let catInfo = allCatagories.find(({ _id }) => _id === catagory)
+
+        propertiesToFill.push(...catInfo.properties)
+
+        while (catInfo?.parent?._id) {
+            const parentCat = allCatagories.find(({ _id }) => _id === catInfo?.parent?._id)
+
+            propertiesToFill.push(...parentCat.properties)
+
+            catInfo = parentCat
+        }
+
+        // console.log(propertiesToFill)
+        // const newProductProperties = {}
+        // propertiesToFill.forEach(p => newProductProperties[p.name] = p.values[0])
+
+        // setProductProperties(newProductProperties)
+        // console.log("productP *** ", productProperties)
+    }
+
+
+
     return (
         <form onSubmit={createProduct}>
             <h1 className="">New Product</h1>
             <label htmlFor="productName">Product name</label>
             <input id="productName" name="productName" required type="text" placeholder="products name" />
-            
-            <label htmlFor="catagories">Catagories</label>
-                <select id="catagories" className="w-auto ml-2" value={catagory} onChange={e =>{
-                    setCatagory(e.target.value)
-                }}>
-                    <option value="">
-                        Uncategorized
-                    </option>
 
-                    {allCatagories.map(catagory =>(
-                        <option key={catagory._id} value={catagory._id}> {catagory.name}</option>
-                    ))}
-                </select>
+            <label htmlFor="catagories">Catagories</label>
+            <select id="catagories" className="w-auto ml-2" value={catagory} onChange={e => {
+                setCatagory(e.target.value)
+            }}>
+                <option value="">
+                    Uncategorized
+                </option>
+
+                {allCatagories.map(catagory => (
+                    <option key={catagory._id} value={catagory._id}> {catagory.name}</option>
+                ))}
+            </select>
+
+
+            {propertiesToFill.length > 0 && propertiesToFill.map((p, ind) => (
+                <div className="flex gap-1" key={ind}>
+                    <div>{p.name} </div>
+
+                    <select
+                        value={productProperties[p.name]}
+                        onChange={(e) => changeProductProp(p.name, e.target.value)}
+                    >
+
+                        {p.values.map((v, i) => (
+                            <option value={v} key={i}>
+                                {v}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )
+
+            )}
+
 
             <label className="block">photos</label>
             <div className="flex flex-wrap gap-2 mt-1">
