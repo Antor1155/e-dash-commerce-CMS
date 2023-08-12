@@ -1,12 +1,9 @@
 import { Catagory } from "../../../models/Catagories"
 import { mongooseConnect } from "../../../database/mongoose"
 
-import { isAdminRequest } from "../auth/[...nextauth]/route"
-
 
 export const GET = async (req, res) => {
     try {
-        await isAdminRequest()
 
         await mongooseConnect()
         const result = await Catagory.find().populate("parent")

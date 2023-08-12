@@ -195,7 +195,7 @@ const Catagories = ({ swal }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {allCatagories.length && allCatagories.map(catagory => (
+                        {allCatagories.length > 0 && allCatagories.map(catagory => (
                             <tr key={catagory._id}>
                                 <td> {catagory.name} </td>
                                 <td>{catagory.parent?.name}</td>
