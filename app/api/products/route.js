@@ -1,11 +1,15 @@
 import { Product } from "../../../models/Product";
 import { mongooseConnect } from "../../../database/mongoose"
 
+import { isAdminRequest } from "../auth/[...nextauth]/route";
+
 export const GET = async (req, res) => {
     const params = new URL(req.url).searchParams;
     const id = params.get("id")
 
     try {
+        await isAdminRequest()
+
         await mongooseConnect()
         let allProducts;
 
@@ -24,8 +28,11 @@ export const GET = async (req, res) => {
 }
 
 export const POST = async (req, res) => {
-    const data = await req.json()
+    
     try {
+        await isAdminRequest()
+
+        const data = await req.json()
         await mongooseConnect()
 
         const { title, description, price, images, catagory, properties } = data
@@ -44,6 +51,8 @@ export const POST = async (req, res) => {
 
 export const PUT = async (req, res) =>{
     try{
+        await isAdminRequest()
+
         await mongooseConnect()
 
         const {title, description, price, _id, images, catagory, properties} = await req.json()
@@ -60,6 +69,8 @@ export const PUT = async (req, res) =>{
 export const DELETE = async (req, res) =>{
     
     try{
+        await isAdminRequest()
+        
         const param = new URL(req.url).searchParams
         const id = param.get("id")
         
