@@ -11,7 +11,6 @@ import "@uploadthing/react/styles.css";
 const NewProduct = () => {
     const router = useRouter()
 
-    const newAddedImagesRef = useRef([])
     const [images, setImages] = useState([])
 
     const [catagory, setCatagory] = useState("")
@@ -38,7 +37,7 @@ const NewProduct = () => {
     }
 
     const handleCancel = async () => {
-        for (const img of newAddedImagesRef.current) {
+        for (const img of images) {
             const key = img.split("/").pop()
             await axios.delete("/api/uploadthing?id=" + key)
         }
@@ -143,7 +142,6 @@ const NewProduct = () => {
                         const newImages = [...images]
                         for (const ele of res) {
                             newImages.push(ele.url)
-                            newAddedImagesRef.current.push(ele.url)
                         }
                         setImages(newImages)
                         // alert("Upload Completed");
