@@ -1,9 +1,15 @@
 import { Catagory } from "../../../models/Catagories"
 import { mongooseConnect } from "../../../database/mongoose"
+import { getServerSession } from "next-auth"
+
+// async function usingSession (req){
+//     const session = await getServerSession(req)
+//     console.log(session)
+// }
 
 export const GET = async (req, res) => {
-    // const params = new URL(req.url).searchParams
-    // const id = params.get("id")
+
+    // usingSession(req)
 
     try {
         await mongooseConnect()
