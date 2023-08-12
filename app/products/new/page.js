@@ -46,7 +46,7 @@ const NewProduct = () => {
         router.push("/products")
     }
 
-    
+
     function changeProductProp(propName, value) {
         setProductProperties(prev => {
             const newProductProp = { ...prev }
@@ -72,6 +72,14 @@ const NewProduct = () => {
         }
     }
 
+    const handleImgDelete = async (image) => {
+
+        const newImages = images.filter(ele => ele != image)
+        setImages(newImages)
+
+        const key = image.split("/").pop()
+        const res = await axios.delete("/api/uploadthing?id=" + key)
+    }
 
 
     return (
@@ -117,9 +125,13 @@ const NewProduct = () => {
 
             <label className="block">photos</label>
             <div className="flex flex-wrap gap-2 mt-1">
-                {images.map(image => (<div className="imgInEdit border flex items-center" onClick={() => handleImgDelete(image)} key={image}>
+                {images.map(image =>
+                    (<div 
+                        className="imgInEdit border flex items-center" onClick={() => handleImgDelete(image)} key={image}>
+
                     <Image src={image} alt="product block" width={100} height={100} sizes="m(max-width: 100px)" />
-                </div>
+
+                 </div>
                 ))}
             </div>
 
