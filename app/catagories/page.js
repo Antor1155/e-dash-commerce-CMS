@@ -172,7 +172,7 @@ const Catagories = ({ swal }) => {
 
                             <button
                                 type="button"
-                                className="btn-default"
+                                className="btn-reject text-sm"
                                 onClick={() => removeProperty(index)}
                             >
                                 remove
