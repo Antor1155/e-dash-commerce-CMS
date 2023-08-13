@@ -12,7 +12,7 @@ export default function Products() {
         <>
             <Link href={"/products/new"} className="btn-primary">Add new Products</Link>
 
-            <table className="basic mt-2">
+            <table className="basic mt-4">
                 <thead>
                     <tr>
                         <td>Product Name</td>
