@@ -47,7 +47,7 @@ label{
 }
 
 .btn-reject{
-  @apply rounded-sm text-white bg-red-500 py-1 px-4;
+  @apply rounded-sm text-red-600 bg-red-200 py-1 px-4;
 }
 
 table.basic {
@@ -63,20 +63,13 @@ table.basic tr td{
 }
 
 table.basic a{
-  @apply text-white px-4 py-1 mx-1 rounded-sm inline-flex items-center gap-1  bg-gray-700 text-sm;
-}
-
-.btn-default, .btn-red{
-  @apply px-4 py-1 rounded-md;
-}
-
-.btn-red{
-  @apply bg-red-800 text-white;
+  @apply px-4 py-1 mx-1 rounded-sm inline-flex items-center gap-1 text-sm;
 }
 
 .btn-default{
-  @apply bg-gray-500 text-white;
+  @apply bg-white text-gray-800 px-4 py-1 rounded-sm border border-gray-200;
 }
+
 
 .imgInEdit:hover img{
   filter: blur(2px);

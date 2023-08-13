@@ -60,7 +60,7 @@ const DeleteProduct = ({ params }) => {
             </div>
 
             <div className="flex gap-2 justify-center">
-                <button className="btn-red" onClick={handleDelete}>Yes</button>
+                <button className="btn-reject" onClick={handleDelete}>Yes</button>
                 <button className="btn-default" onClick={goBack}>No</button>
             </div>
 
