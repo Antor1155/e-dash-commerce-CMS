@@ -148,7 +148,7 @@ const Catagories = ({ swal }) => {
                     <button
                         onClick={addProperty}
                         type="button"
-                        className="btn-default text-sm mb-2">
+                        className="btn-gray text-sm my-2">
                         Add new property
                     </button>
 

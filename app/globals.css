@@ -46,8 +46,16 @@ label{
   @apply bg-primary text-white px-4 py-1 rounded-sm;
 }
 
-.btn-reject{
-  @apply rounded-sm text-red-600 bg-red-200 py-1 px-4;
+.btn-primary:hover{
+  @apply shadow-lg;
+}
+
+.btn-gray{
+  @apply bg-gray-600 text-white py-1 px-4 rounded-sm;
+}
+
+.btn-gray:hover{
+  @apply shadow-lg;
 }
 
 table.basic {
@@ -67,7 +75,15 @@ table.basic a{
 }
 
 .btn-default{
-  @apply bg-white text-gray-800 px-4 py-1 rounded-sm border border-gray-200;
+  @apply bg-white text-gray-800 px-4 py-1 rounded-sm border border-gray-200 shadow-sm;
+}
+
+.btn-reject{
+  @apply rounded-sm text-red-600 bg-red-200 py-1 px-4;
+}
+
+.btn-default:hover, .btn-reject:hover{
+  @apply shadow-lg;
 }
 
 
