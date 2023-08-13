@@ -106,7 +106,7 @@ const EditProduct = ({ params }) => {
                 <input id="title" name="title" required type="text" placeholder="products name" value={title} onChange={e => setTitle(e.target.value)} />
 
                 <label htmlFor="catagories">Catagories</label>
-                <select id="catagories" className="w-auto ml-2" value={catagory || ""} onChange={e => {
+                <select id="catagories" className="" value={catagory || ""} onChange={e => {
                     setCatagory(e.target.value)
                 }}>
                     <option value="">
@@ -119,8 +119,8 @@ const EditProduct = ({ params }) => {
                 </select>
 
                 {propertiesToFill.length > 0 && propertiesToFill.map((p, ind) => (
-                    <div className="flex gap-1" key={ind}>
-                        <div>{p.name} </div>
+                    <div className="" key={ind}>
+                        <label>{p.name[0]?.toUpperCase() + p.name.substring(1)} </label>
 
                         <select
                             value = {productProperties[p.name] || ""}
@@ -140,12 +140,15 @@ const EditProduct = ({ params }) => {
 
 
 
-                <label className="block">photos</label>
+                <label className="block">Photos</label>
                 <div className="flex flex-wrap gap-2 mt-1">
-                    {images.map(image => (<div className="imgInEdit border flex items-center" onClick={() => handleImgDelete(image)} key={image}>
-                        <Image src={image} alt="product block" width={100} height={100} sizes="m(max-width: 100px)" />
+
+                    {images.map(image => (
+                    <div className="imgInEdit border border-gray-200 flex items-center p-3 bg-white rounded-sm" onClick={() => handleImgDelete(image)} key={image}>
+                        <Image src={image} alt="product block" width={100} height={100} />
                     </div>
                     ))}
+                    
                 </div>
 
                 <div className="flex my-3">
@@ -179,7 +182,7 @@ const EditProduct = ({ params }) => {
                     <button type="submit" className="btn-primary">Save</button>
 
                     <button type="button" onClick={handleCancel}
-                        className=" bg-red-500 text-white border rounded-lg p-2">
+                        className="btn-reject">
                         Cancel
                     </button>
                 </div>

@@ -88,7 +88,7 @@ const NewProduct = () => {
             <input id="productName" name="productName" required type="text" placeholder="products name" />
 
             <label htmlFor="catagories">Catagories</label>
-            <select id="catagories" className="w-auto ml-2" value={catagory} onChange={e => {
+            <select id="catagories" className="" value={catagory} onChange={e => {
                 setCatagory(e.target.value)
             }}>
                 <option value="">
@@ -103,7 +103,7 @@ const NewProduct = () => {
 
             {propertiesToFill.length > 0 && propertiesToFill.map((p, ind) => (
                 <div className="flex gap-1" key={ind}>
-                    <div>{p.name} </div>
+                    <label>{p.name[0]?.toUpperCase() + p.name.substring(1)} </label>
 
                     <select
                         value={productProperties[p.name] || ""}
@@ -126,9 +126,9 @@ const NewProduct = () => {
             <div className="flex flex-wrap gap-2 mt-1">
                 {images.map(image =>
                     (<div 
-                        className="imgInEdit border flex items-center" onClick={() => handleImgDelete(image)} key={image}>
+                        className="imgInEdit border border-gray-200 flex items-center p-3 bg-white rounded-sm" onClick={() => handleImgDelete(image)} key={image}>
 
-                    <Image src={image} alt="product block" width={100} height={100} sizes="m(max-width: 100px)" />
+                    <Image src={image} alt="product block" width={100} height={100} />
 
                  </div>
                 ))}
@@ -163,7 +163,7 @@ const NewProduct = () => {
                 <button type="submit" className="btn-primary">Save</button>
 
                 <button type="button" onClick={handleCancel}
-                    className=" bg-red-500 text-white border rounded-lg p-2">
+                    className=" btn-reject">
                     Cancel
                 </button>
             </div>
