@@ -2,14 +2,14 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-export default function Orders(){
-    const [orders, setOrders]  = useState([])
+export default function Orders() {
+    const [orders, setOrders] = useState([])
 
     useEffect(() => {
         axios.get("/api/orders")
-        .then(response => {
-            setOrders(response.data)
-        }).catch(error => console.log(error))
+            .then(response => {
+                setOrders(response.data)
+            }).catch(error => console.log(error))
     }, [])
 
     return (
@@ -19,7 +19,7 @@ export default function Orders(){
             <table className="basic">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Date</th>
                         <th>Recipient</th>
                         <th>Products</th>
                     </tr>
@@ -28,13 +28,22 @@ export default function Orders(){
                 <tbody>
                     {orders.length > 0 && orders.map(order => (
                         <tr key={order._id}>
-                            <td>{order._id}</td>
+                            <td>{(new Date(order?.createdAt)).toLocaleString()}</td>
                             <td>
                                 {order.name} {order.email} <br />
                                 {order.city} {order.postalCode} {order.country} <br />
                                 {order.streetAddress}
                             </td>
 
+                            <td>
+                                {order.line_items.map(l => (
+                                    <>
+                                        {l.price_data?.product_data?.name} x {l.quantity}
+                                        <br />
+
+                                    </>
+                                ))}
+                            </td>
                         </tr>
                     ))}
 

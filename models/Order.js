@@ -8,7 +8,7 @@ const OrderSchema = new Schema({
     postalCode: String,
     streetAddress: String,
     country: String,
-    padi: Boolean,
+    paid: Boolean,
 }, {
     timestamps: true,
 })
