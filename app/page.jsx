@@ -65,7 +65,7 @@ export default function Home() {
         </div>
 
         <p className="text-gray-500 border-b text-center mt-5">
-          Note: Here prices are static as on demo project, we won't get daily orders
+          Note: Here prices are static as on demo project, we won&apos;t get daily orders
         </p>
 
       </section>
